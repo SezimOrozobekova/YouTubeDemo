@@ -27,5 +27,4 @@ public class Channel {
     // and it's not associated with any other Channel, it will be deleted from the database
     @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Video> videos = new ArrayList<>();
-
 }

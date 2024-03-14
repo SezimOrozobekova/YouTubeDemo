@@ -17,6 +17,7 @@ public class Interaction {
 
     private boolean liked;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "video_id")
     private Video video;
 }
