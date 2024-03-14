@@ -24,8 +24,6 @@ public class Video {
 
     private String title;
 
-//    @Column(nullable = false)
-
     private String description;
 
     private LocalDateTime uploadDate;
@@ -33,8 +31,13 @@ public class Video {
     private Duration duration;
 
     private Long views;
-//
-//    @ManyToOne
-//    private Channel channel;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "channel_id")
+    private Channel channel;
+
+    @OneToMany(mappedBy = "video", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
 
 }
