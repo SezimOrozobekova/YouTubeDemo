@@ -14,16 +14,10 @@ import java.time.LocalDateTime;
 @Setter
 public class VideoDto {
     private Long id;
-
     private String title;
-
     private String description;
-
     private LocalDateTime uploadDate;
-
     private Duration duration;
-
     private Long views;
-
-//    private Long channel_id;
+    private Long channelId;
 }

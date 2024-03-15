@@ -12,6 +12,7 @@ import lombok.Setter;
 @Setter
 public class ChannelDto {
     private Long id;
-
     private String name;
+    private String avatar;
+
 }

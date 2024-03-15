@@ -14,4 +14,5 @@ public class InteractionDto {
     private Long id;
     private boolean liked;
     private Long videoId;
+
 }
