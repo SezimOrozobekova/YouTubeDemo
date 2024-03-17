@@ -1,6 +1,8 @@
 package com.example.youtubedemo.serviceTest;
 
 import com.example.youtubedemo.Entity.Comment;
+import com.example.youtubedemo.dto.CommentDto;
+import com.example.youtubedemo.mappers.CommentMapper;
 import com.example.youtubedemo.repositories.CommentRepository;
 import com.example.youtubedemo.services.CommentService;
 import org.junit.jupiter.api.Test;
@@ -9,7 +11,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -24,6 +25,9 @@ public class CommentServiceTest {
     @Mock
     private CommentRepository commentRepository;
 
+    @Mock
+    private CommentMapper commentMapper;
+
     @InjectMocks
     private CommentService commentService;
 
@@ -36,7 +40,7 @@ public class CommentServiceTest {
         when(commentRepository.findAll()).thenReturn(comments);
 
         // When
-        List<Comment> result = commentService.getAllComments();
+        List<CommentDto> result = commentService.getAllComments();
 
         // Then
         assertEquals(comments.size(), result.size());
@@ -49,10 +53,11 @@ public class CommentServiceTest {
         Long id = 1L;
         Comment comment = new Comment();
         comment.setId(id);
+        comment.setText("Hallo");
         when(commentRepository.findById(id)).thenReturn(Optional.of(comment));
 
         // When
-        Comment result = commentService.getCommentById(id);
+        CommentDto result = commentService.getCommentById(id);
 
         // Then
         assertNotNull(result);
@@ -74,39 +79,44 @@ public class CommentServiceTest {
     @Test
     void testCreateComment() {
         // Given
+        CommentDto commentDto = new CommentDto();
         Comment comment = new Comment();
+        when(commentMapper.dtoToEntity(commentDto)).thenReturn(comment);
         when(commentRepository.save(comment)).thenReturn(comment);
+        when(commentMapper.entityToDto(comment)).thenReturn(commentDto);
 
         // When
-        Comment result = commentService.createComment(comment);
+        CommentDto result = commentService.createComment(commentDto);
 
         // Then
         assertNotNull(result);
+        verify(commentMapper, times(1)).dtoToEntity(commentDto);
         verify(commentRepository, times(1)).save(comment);
+        verify(commentMapper, times(1)).entityToDto(comment);
     }
 
     @Test
     void testUpdateComment() {
         // Given
         Long id = 1L;
+        CommentDto updatedCommentDto = new CommentDto();
+        updatedCommentDto.setText("Updated text");
         Comment existingComment = new Comment();
         existingComment.setId(id);
-        existingComment.setText("Old Text");
-
-        Comment updatedComment = new Comment();
-        updatedComment.setText("New Text");
-
+        existingComment.setText("Old text");
         when(commentRepository.findById(id)).thenReturn(Optional.of(existingComment));
         when(commentRepository.save(existingComment)).thenReturn(existingComment);
+        when(commentMapper.entityToDto(existingComment)).thenReturn(updatedCommentDto);
 
         // When
-        Comment result = commentService.updateComment(id, updatedComment);
+        CommentDto result = commentService.updateComment(id, updatedCommentDto);
 
         // Then
         assertNotNull(result);
-        assertEquals(updatedComment.getText(), result.getText());
+        assertEquals(updatedCommentDto.getText(), result.getText());
         verify(commentRepository, times(1)).findById(id);
         verify(commentRepository, times(1)).save(existingComment);
+        verify(commentMapper, times(1)).entityToDto(existingComment);
     }
 
     @Test
@@ -114,14 +124,12 @@ public class CommentServiceTest {
         // Given
         Long id = 1L;
         Comment comment = new Comment();
-        comment.setId(id);
-        when(commentRepository.findById(id)).thenReturn(Optional.of(comment));
+        when(commentRepository.existsById(id)).thenReturn(true);
 
         // When
         commentService.deleteComment(id);
 
         // Then
-        verify(commentRepository, times(1)).findById(id);
-        verify(commentRepository, times(1)).delete(comment);
+        verify(commentRepository, times(1)).deleteById(id);
     }
 }

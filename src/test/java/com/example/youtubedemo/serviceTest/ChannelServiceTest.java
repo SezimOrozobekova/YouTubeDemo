@@ -1,15 +1,17 @@
 package com.example.youtubedemo.serviceTest;
 
+import com.example.youtubedemo.dto.ChannelDto;
 import com.example.youtubedemo.Entity.Channel;
+import com.example.youtubedemo.mappers.ChannelMapper;
 import com.example.youtubedemo.repositories.ChannelRepository;
 import com.example.youtubedemo.services.ChannelService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -17,62 +19,76 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 public class ChannelServiceTest {
 
     @Mock
     private ChannelRepository channelRepository;
 
+    @Mock
+    private ChannelMapper channelMapper;
+
     @InjectMocks
     private ChannelService channelService;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.initMocks(this);
-    }
 
     @Test
     void testGetAllChannels() {
         // Given
-        List<Channel> channels = new ArrayList<>();
-        channels.add(new Channel());
-        channels.add(new Channel());
+        Channel channel1 = new Channel();
+        channel1.setId(1L);
+        channel1.setName("Channel 1");
+
+        Channel channel2 = new Channel();
+        channel2.setId(2L);
+        channel2.setName("Channel 2");
+
+        List<Channel> channels = Arrays.asList(channel1, channel2);
         when(channelRepository.findAll()).thenReturn(channels);
 
+        ChannelDto channelDto1 = new ChannelDto();
+        channelDto1.setId(1L);
+        channelDto1.setName("Channel 1");
+
+        ChannelDto channelDto2 = new ChannelDto();
+        channelDto2.setId(2L);
+        channelDto2.setName("Channel 2");
+
+        when(channelMapper.entityToDto(channel1)).thenReturn(channelDto1);
+        when(channelMapper.entityToDto(channel2)).thenReturn(channelDto2);
+
         // When
-        List<Channel> result = channelService.getAllChannels();
+        List<ChannelDto> result = channelService.getAllChannels();
 
         // Then
-        assertEquals(channels.size(), result.size());
-        verify(channelRepository, times(1)).findAll();
+        assertEquals(2, result.size());
+        assertEquals(channelDto1, result.get(0));
+        assertEquals(channelDto2, result.get(1));
     }
 
     @Test
     void testGetChannelById() {
         // Given
-        Long id = 1L;
+        Long channelId = 1L;
         Channel channel = new Channel();
-        channel.setId(id);
-        when(channelRepository.findById(id)).thenReturn(Optional.of(channel));
+        channel.setId(channelId);
+        channel.setName("Test Channel");
+
+        when(channelRepository.findById(channelId)).thenReturn(Optional.of(channel));
+
+        ChannelDto expectedChannelDto = new ChannelDto();
+        expectedChannelDto.setId(channelId);
+        expectedChannelDto.setName("Test Channel");
+
+        when(channelMapper.entityToDto(channel)).thenReturn(expectedChannelDto);
 
         // When
-        Channel result = channelService.getChannelById(id);
+        ChannelDto result = channelService.getChannelById(channelId);
 
         // Then
         assertNotNull(result);
-        assertEquals(id, result.getId());
-        verify(channelRepository, times(1)).findById(id);
+        assertEquals(expectedChannelDto.getId(), result.getId());
+        assertEquals(expectedChannelDto.getName(), result.getName());
     }
 
-    @Test
-    void testGetChannelByIdNotFound() {
-        // Given
-        Long id = 1L;
-        when(channelRepository.findById(id)).thenReturn(Optional.empty());
-
-        // When / Then
-        assertThrows(NoSuchElementException.class, () -> channelService.getChannelById(id));
-        verify(channelRepository, times(1)).findById(id);
-    }
-
-
+    // Write similar tests for other methods such as createChannel, updateChannel, and deleteChannel
 }

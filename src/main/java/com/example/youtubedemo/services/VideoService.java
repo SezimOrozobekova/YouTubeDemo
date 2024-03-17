@@ -37,9 +37,14 @@ public class VideoService {
 
 
     public VideoDto createVideo(VideoDto videoDto) {
-        Video video = videoMapper.dtoToEntity(videoDto);
-        Video savedVideo = videoRepository.save(video);
-        return videoMapper.entityToDto(savedVideo);
+        try {
+            Video video = videoMapper.dtoToEntity(videoDto);
+            Video savedVideo = videoRepository.save(video);
+            return videoMapper.entityToDto(savedVideo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to create video: " + e.getMessage());
+        }
     }
 
     public VideoDto getVideoById(Long id) throws NoSuchElementException {

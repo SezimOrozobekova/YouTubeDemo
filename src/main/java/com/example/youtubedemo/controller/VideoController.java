@@ -1,12 +1,16 @@
 package com.example.youtubedemo.controller;
 
-
 import com.example.youtubedemo.dto.VideoDto;
 import com.example.youtubedemo.services.VideoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class VideoController {
@@ -23,6 +27,7 @@ public class VideoController {
     }
 
 
+
     @GetMapping(ID_PATH)
     public ResponseEntity<VideoDto> getVideoById(@PathVariable Long id) {
         try {
@@ -32,6 +37,7 @@ public class VideoController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
     @DeleteMapping(ID_PATH)
     public ResponseEntity<Void> deleteVideo(@PathVariable Long id) {
         try {
@@ -61,5 +67,4 @@ public class VideoController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
 }
