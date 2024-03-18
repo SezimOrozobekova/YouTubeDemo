@@ -2,6 +2,10 @@ package com.example.youtubedemo.Entity;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.Duration;
@@ -22,12 +26,16 @@ public class Video {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Title is required")
     private String title;
 
+    @Size(min = 5, max = 100)
     private String description;
 
+    @PastOrPresent(message = "Upload date must be in the past or present")
     private LocalDateTime uploadDate;
 
+    @NotNull(message = "Duration cannot be null")
     private Duration duration;
 
     private Long views;
