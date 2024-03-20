@@ -11,10 +11,12 @@ import org.mapstruct.MappingTarget;
 public interface VideoMapper {
     @Mapping(source = "id", target = "id")
     @Mapping(source = "title", target = "title")
+    @Mapping(source = "channel.id", target = "channelId")
     VideoDto entityToDto(Video video);
 
     @Mapping(source = "id", target = "id")
     @Mapping(source = "title", target = "title")
+    @Mapping(source = "channelId", target = "channel.id")
     Video dtoToEntity(VideoDto videoDTO);
 
 }
