@@ -1,16 +1,17 @@
 package com.example.youtubedemo.controller;
 
 import com.example.youtubedemo.dto.VideoDto;
+import com.example.youtubedemo.advice.VideoNotFoundException;
 import com.example.youtubedemo.services.VideoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 
 @RestController
 public class VideoController {
@@ -26,45 +27,33 @@ public class VideoController {
         this.videoService = videoService;
     }
 
-
-
     @GetMapping(ID_PATH)
-    public ResponseEntity<VideoDto> getVideoById(@PathVariable Long id) {
-        try {
-            VideoDto videoDto = videoService.getVideoById(id);
-            return new ResponseEntity<>(videoDto, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<?> getVideoById(@PathVariable Long id){
+        VideoDto videoDto = videoService.getVideoById(id);
+        return new ResponseEntity<>(videoDto, HttpStatus.OK);
+    }
+
+    @GetMapping(VIDEO_PATH)
+    public List<VideoDto> getAllVideos() {
+        return videoService.getAllVideos();
     }
 
     @DeleteMapping(ID_PATH)
     public ResponseEntity<Void> deleteVideo(@PathVariable Long id) {
-        try {
-            videoService.deleteVideo(id);
-            return ResponseEntity.noContent().build();
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        videoService.deleteVideo(id);
+        return ResponseEntity.noContent().build();
     }
-
     @PostMapping(VIDEO_PATH)
-    public ResponseEntity<VideoDto> createVideo(@RequestBody VideoDto videoDto) {
-        try {
-            VideoDto savedVideoDto = videoService.createVideo(videoDto);
-            return new ResponseEntity<>(savedVideoDto, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<?> createVideo(@Valid @RequestBody VideoDto videoDto) {
+        VideoDto savedVideoDto = videoService.createVideo(videoDto);
+        return new ResponseEntity<>(savedVideoDto, HttpStatus.CREATED);
     }
 
     @PutMapping(ID_PATH)
     public ResponseEntity<VideoDto> updateVideo(@PathVariable Long id, @RequestBody VideoDto videoDto) {
-        try {
-            VideoDto updatedVideoDto = videoService.updateVideo(id, videoDto);
-            return new ResponseEntity<>(updatedVideoDto, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        VideoDto updatedVideoDto = videoService.updateVideo(id, videoDto);
+        return new ResponseEntity<>(updatedVideoDto, HttpStatus.OK);
+
     }
+
 }
