@@ -1,13 +1,12 @@
 package com.example.youtubedemo.controller;
 
 import com.example.youtubedemo.dto.VideoDto;
-import com.example.youtubedemo.advice.VideoNotFoundException;
 import com.example.youtubedemo.services.VideoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -50,10 +49,9 @@ public class VideoController {
     }
 
     @PutMapping(ID_PATH)
-    public ResponseEntity<VideoDto> updateVideo(@PathVariable Long id, @RequestBody VideoDto videoDto) {
+    public ResponseEntity<VideoDto> updateVideo(@PathVariable Long id, @Valid @RequestBody VideoDto videoDto) {
         VideoDto updatedVideoDto = videoService.updateVideo(id, videoDto);
-        return new ResponseEntity<>(updatedVideoDto, HttpStatus.OK);
-
+        return new ResponseEntity<>( updatedVideoDto, HttpStatus.OK);
     }
 
 }

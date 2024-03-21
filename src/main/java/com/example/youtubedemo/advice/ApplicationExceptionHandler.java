@@ -7,9 +7,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @RestControllerAdvice
 public class ApplicationExceptionHandler {
@@ -36,8 +36,21 @@ public class ApplicationExceptionHandler {
 
     @ExceptionHandler(DataAccessException.class)
     public ResponseEntity<Object> handleDataAccessException(DataAccessException ex) {
-        String errorMessage = "Failed to fetch videos from the database";
+        String errorMessage = "Failed to fetch element from the database";
         return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<String> handleNoSuchElementException(NoSuchElementException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Resource not found");
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleException(Exception ex) {
+        ex.printStackTrace();
+
+        return new ResponseEntity<>("An error occurred: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 
 }

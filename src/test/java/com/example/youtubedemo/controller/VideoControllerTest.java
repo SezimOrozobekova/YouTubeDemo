@@ -2,87 +2,89 @@ package com.example.youtubedemo.controller;
 
 import com.example.youtubedemo.dto.VideoDto;
 import com.example.youtubedemo.services.VideoService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import java.util.ArrayList;
+import java.util.List;
 
-@ExtendWith(MockitoExtension.class)
-public class VideoControllerTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
+
+class VideoControllerTest {
 
     @Mock
-    private VideoService videoService;
+    VideoService videoService;
 
     @InjectMocks
-    private VideoController videoController;
+    VideoController videoController;
 
-    private MockMvc mockMvc;
-
-    @Test
-    public void testGetVideoById() throws Exception {
-        // Setup
-        VideoDto videoDto = new VideoDto(); // create a sample VideoDto
-        videoDto.setId(1L);
-        when(videoService.getVideoById(anyLong())).thenReturn(videoDto);
-
-        // Test
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/video/{id}", 1))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(1)); // Assuming your VideoDto has an "id" field
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.initMocks(this);
     }
 
     @Test
-    public void testDeleteVideo() throws Exception {
-        // Test
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/video/{id}", 1))
-                .andExpect(status().isNoContent());
+    void testGetVideoById() {
+        Long videoId = 1L;
+        VideoDto expectedVideoDto = new VideoDto();
+        when(videoService.getVideoById(videoId)).thenReturn(expectedVideoDto);
+
+        ResponseEntity<?> responseEntity = videoController.getVideoById(videoId);
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(expectedVideoDto, responseEntity.getBody());
     }
 
     @Test
-    public void testCreateVideo() throws Exception {
-        // Setup
-        VideoDto videoDto = new VideoDto(); // create a sample VideoDto
-        videoDto.setId(1L);
-        when(videoService.createVideo(any(VideoDto.class))).thenReturn(videoDto);
+    void testGetAllVideos() {
+        List<VideoDto> expectedVideoList = new ArrayList<>();
+        when(videoService.getAllVideos()).thenReturn(expectedVideoList);
 
-        // Test
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/video")
-                .content("{}")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(1)); // Assuming your VideoDto has an "id" field
+        List<VideoDto> result = videoController.getAllVideos();
+
+        assertEquals(expectedVideoList, result);
     }
 
     @Test
-    public void testUpdateVideo() throws Exception {
-        // Setup
-        VideoDto videoDto = new VideoDto(); // create a sample VideoDto
-        videoDto.setId(1L);
-        when(videoService.updateVideo(anyLong(), any(VideoDto.class))).thenReturn(videoDto);
+    void testDeleteVideo() {
+        Long videoId = 1L;
+        ResponseEntity<Void> expectedResponseEntity = ResponseEntity.noContent().build();
 
-        // Test
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/video/{id}", 1)
-                .content("{}")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(1)); // Assuming your VideoDto has an "id" field
+        ResponseEntity<Void> result = videoController.deleteVideo(videoId);
+
+        assertEquals(expectedResponseEntity, result);
+        verify(videoService, times(1)).deleteVideo(videoId);
     }
 
-    @org.junit.jupiter.api.BeforeEach
-    public void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(videoController).build();
+    @Test
+    void testCreateVideo() {
+        VideoDto videoDto = new VideoDto();
+        VideoDto savedVideoDto = new VideoDto();
+        when(videoService.createVideo(videoDto)).thenReturn(savedVideoDto);
+
+        ResponseEntity<?> responseEntity = videoController.createVideo(videoDto);
+
+        assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
+        assertEquals(savedVideoDto, responseEntity.getBody());
+    }
+
+    @Test
+    void testUpdateVideo() {
+        Long videoId = 1L;
+        VideoDto videoDto = new VideoDto();
+        VideoDto updatedVideoDto = new VideoDto();
+        when(videoService.updateVideo(videoId, videoDto)).thenReturn(updatedVideoDto);
+
+        ResponseEntity<VideoDto> responseEntity = videoController.updateVideo(videoId, videoDto);
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(updatedVideoDto, responseEntity.getBody());
     }
 }

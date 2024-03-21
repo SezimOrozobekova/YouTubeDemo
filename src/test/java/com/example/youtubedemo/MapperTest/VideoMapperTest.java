@@ -27,7 +27,6 @@ public class VideoMapperTest {
         VideoDto videoDto = videoMapper.entityToDto(video);
 
 
-        assertEquals(video.getId(), videoDto.getId());
         assertEquals(video.getTitle(), videoDto.getTitle());
 
 
@@ -47,7 +46,6 @@ public class VideoMapperTest {
 
         Video video = videoMapper.dtoToEntity(videoDto);
 
-        assertEquals(videoDto.getId(), video.getId());
         assertEquals(videoDto.getTitle(), video.getTitle());
 
     }

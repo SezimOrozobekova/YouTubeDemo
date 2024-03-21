@@ -24,15 +24,19 @@ public class Video {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(updatable = false)
     private Long id;
 
     @NotBlank(message = "Title is required")
+    @Size(min = 1, max = 255)
     private String title;
 
-    @Size(min = 5, max = 100)
+    @Size(min = 1, max = 1000)
+    @NotBlank
     private String description;
 
     @PastOrPresent(message = "Upload date must be in the past or present")
+    @Column(updatable = false)
     private LocalDateTime uploadDate;
 
     @NotNull(message = "Duration cannot be null")

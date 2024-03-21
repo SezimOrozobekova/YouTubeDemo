@@ -1,6 +1,9 @@
 package com.example.youtubedemo.dto;
 
+import jakarta.persistence.Column;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,16 +18,19 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class VideoDto {
-    private Long id;
-    @NotNull
+//    @Column(updatable = false)
+//    private Long id;
+    @NotBlank
     @Size(min = 1, max = 255)
     private String title;
 
-    @NotNull
+    @NotBlank
     @Size(min = 1, max = 1000)
     private String description;
 
     @NotNull
+    @Column(updatable = false)
+    @PastOrPresent(message = "Upload date must be in the past or present")
     private LocalDateTime uploadDate;
 
     @NotNull
@@ -34,5 +40,6 @@ public class VideoDto {
     private Long views;
 
     @NotNull
+    @Column(updatable = false)
     private Long channelId;
 }
