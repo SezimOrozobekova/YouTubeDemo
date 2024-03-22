@@ -35,22 +35,18 @@ public class ChannelServiceTest {
     void testGetAllChannels() {
         // Given
         Channel channel1 = new Channel();
-        channel1.setId(1L);
         channel1.setName("Channel 1");
 
         Channel channel2 = new Channel();
-        channel2.setId(2L);
         channel2.setName("Channel 2");
 
         List<Channel> channels = Arrays.asList(channel1, channel2);
         when(channelRepository.findAll()).thenReturn(channels);
 
         ChannelDto channelDto1 = new ChannelDto();
-        channelDto1.setId(1L);
         channelDto1.setName("Channel 1");
 
         ChannelDto channelDto2 = new ChannelDto();
-        channelDto2.setId(2L);
         channelDto2.setName("Channel 2");
 
         when(channelMapper.entityToDto(channel1)).thenReturn(channelDto1);
@@ -76,7 +72,6 @@ public class ChannelServiceTest {
         when(channelRepository.findById(channelId)).thenReturn(Optional.of(channel));
 
         ChannelDto expectedChannelDto = new ChannelDto();
-        expectedChannelDto.setId(channelId);
         expectedChannelDto.setName("Test Channel");
 
         when(channelMapper.entityToDto(channel)).thenReturn(expectedChannelDto);
@@ -86,7 +81,6 @@ public class ChannelServiceTest {
 
         // Then
         assertNotNull(result);
-        assertEquals(expectedChannelDto.getId(), result.getId());
         assertEquals(expectedChannelDto.getName(), result.getName());
     }
 

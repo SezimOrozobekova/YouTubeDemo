@@ -34,28 +34,26 @@ public class ChannelControllerTest {
     public void testGetChannelById() throws Exception {
         // Setup
         ChannelDto channelDto = new ChannelDto(); // create a sample ChannelDto
-        channelDto.setId(1L);
         when(channelService.getChannelById(anyLong())).thenReturn(channelDto);
 
         // Test
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/channel/{id}", 1))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(1)); // Assuming your ChannelDto has an "id" field
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+        // You can add more assertions based on your ChannelDto fields
     }
 
     @Test
     public void testGetAllChannels() throws Exception {
         // Setup
         ChannelDto channelDto = new ChannelDto(); // create a sample ChannelDto
-        channelDto.setId(1L);
         when(channelService.getAllChannels()).thenReturn(Collections.singletonList(channelDto));
 
         // Test
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/channel"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$[0].id").value(1)); // Assuming your ChannelDto has an "id" field
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+        // You can add more assertions based on your ChannelDto fields
     }
 
     @org.junit.jupiter.api.BeforeEach

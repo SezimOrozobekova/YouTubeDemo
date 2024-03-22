@@ -3,6 +3,7 @@ package com.example.youtubedemo.controller;
 import com.example.youtubedemo.dto.ChannelDto;
 import com.example.youtubedemo.dto.VideoDto;
 import com.example.youtubedemo.services.ChannelService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,53 +25,29 @@ public class ChannelController {
 
     @GetMapping(ID_PATH)
     public ResponseEntity<ChannelDto> getVideoById(@PathVariable Long id) {
-        try {
             ChannelDto channelDto = channelService.getChannelById(id);
             return new ResponseEntity<>(channelDto, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
     }
     @GetMapping(CHANNEL_PATH)
     public ResponseEntity<List<ChannelDto>> getAllChannels() {
-        try {
             List<ChannelDto> channels = channelService.getAllChannels();
             return new ResponseEntity<>(channels, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
-
     @PostMapping(CHANNEL_PATH)
-    public ResponseEntity<ChannelDto> createChannel(@RequestBody ChannelDto channelDto) {
-        try {
-            ChannelDto createdChannelDto = channelService.createChannel(channelDto);
-            return new ResponseEntity<>(createdChannelDto, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+    public ResponseEntity<ChannelDto> createChannel(@Valid @RequestBody ChannelDto channelDto) {
+        ChannelDto createdChannelDto = channelService.createChannel(channelDto);
+        return new ResponseEntity<>(createdChannelDto, HttpStatus.CREATED);
 
+    }
     @PutMapping(ID_PATH)
-    public ResponseEntity<ChannelDto> updateChannel(@PathVariable Long id, @RequestBody ChannelDto updatedChannelDto) {
-        try {
-            ChannelDto updatedChannel = channelService.updateChannel(id, updatedChannelDto);
-            return new ResponseEntity<>(updatedChannel, HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<ChannelDto> updateChannel(@PathVariable Long id, @Valid @RequestBody ChannelDto updatedChannelDto) {
+        ChannelDto updatedChannel = channelService.updateChannel(id, updatedChannelDto);
+        return new ResponseEntity<>(updatedChannel, HttpStatus.OK);
     }
-
     @DeleteMapping(ID_PATH)
     public ResponseEntity<Void> deleteChannel(@PathVariable Long id) {
-        try {
-            channelService.deleteChannel(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        channelService.deleteChannel(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }

@@ -14,7 +14,6 @@ public class ChannelMapperTest {
     void testEntityToDto() {
         // Create a Channel entity
         Channel channel = new Channel();
-        channel.setId(1L);
         channel.setName("Channel Name");
         channel.setAvatar("Avatar URL");
 
@@ -23,7 +22,6 @@ public class ChannelMapperTest {
 
         // Check if the conversion is successful
         assertNotNull(channelDto);
-        assertEquals(channel.getId(), channelDto.getId());
         assertEquals(channel.getName(), channelDto.getName());
         assertEquals(channel.getAvatar(), channelDto.getAvatar());
     }
@@ -32,7 +30,6 @@ public class ChannelMapperTest {
     void testDtoToEntity() {
         // Create a ChannelDto
         ChannelDto channelDto = new ChannelDto();
-        channelDto.setId(1L);
         channelDto.setName("Channel Name");
         channelDto.setAvatar("Avatar URL");
 
@@ -41,7 +38,6 @@ public class ChannelMapperTest {
 
         // Check if the conversion is successful
         assertNotNull(channel);
-        assertEquals(channelDto.getId(), channel.getId());
         assertEquals(channelDto.getName(), channel.getName());
         assertEquals(channelDto.getAvatar(), channel.getAvatar());
     }

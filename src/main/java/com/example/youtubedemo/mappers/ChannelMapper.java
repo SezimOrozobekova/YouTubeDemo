@@ -11,9 +11,9 @@ public interface ChannelMapper {
 
     ChannelMapper INSTANCE = Mappers.getMapper(ChannelMapper.class);
 
-    @Mapping(source = "id", target = "id")
+    @Mapping(source = "name", target = "name")
     ChannelDto entityToDto(Channel channel);
 
-    @Mapping(source = "id", target = "id")
+    @Mapping(source = "name", target = "name")
     Channel dtoToEntity(ChannelDto channelDto);
 }

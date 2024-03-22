@@ -5,6 +5,7 @@ import com.example.youtubedemo.dto.ChannelDto;
 import com.example.youtubedemo.mappers.ChannelMapper;
 import com.example.youtubedemo.repositories.ChannelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,14 +24,14 @@ public class ChannelService {
         this.channelMapper = channelMapper;
     }
 
-    public List<ChannelDto> getAllChannels() {
+    public List<ChannelDto> getAllChannels() throws DataAccessException {
         List<Channel> channels = channelRepository.findAll();
         return channels.stream()
                 .map(channelMapper::entityToDto)
                 .collect(Collectors.toList());
     }
 
-    public ChannelDto getChannelById(Long id) {
+    public ChannelDto getChannelById(Long id) throws NoSuchElementException{
         Channel channel = channelRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Channel not found with id: " + id));
         return channelMapper.entityToDto(channel);
@@ -42,18 +43,16 @@ public class ChannelService {
         return channelMapper.entityToDto(savedChannel);
     }
 
-    public ChannelDto updateChannel(Long id, ChannelDto updatedChannelDto) {
+    public ChannelDto updateChannel(Long id, ChannelDto updatedChannelDto) throws NoSuchElementException{
         Channel existingChannel = channelRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Channel not found with id: " + id));
-
         Channel updatedChannel = channelMapper.dtoToEntity(updatedChannelDto);
-        updatedChannel.setId(id); // Ensure the correct ID is set for the updated channel
-
+        updatedChannel.setId(id);
         Channel savedChannel = channelRepository.save(updatedChannel);
         return channelMapper.entityToDto(savedChannel);
     }
 
-    public void deleteChannel(Long id) {
+    public void deleteChannel(Long id) throws NoSuchElementException{
         if (!channelRepository.existsById(id)) {
             throw new NoSuchElementException("Channel not found with id: " + id);
         }
