@@ -9,15 +9,35 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>kg.alatoo</groupId>
-	<artifactId>library-app</artifactId>
+	<artifactId>youtubedemo</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>library-app</name>
-	<description>library-app</description>
+	<name>youtubedemo</name>
+	<description>youtubedemo</description>
 	<properties>
 		<java.version>17</java.version>
 		<org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
 	</properties>
 	<dependencies>
+
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-jsr310 -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+			<version>2.17.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+			<version>2.17.0</version> <!-- Use the appropriate version -->
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate.validator</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>8.0.0.Final</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>

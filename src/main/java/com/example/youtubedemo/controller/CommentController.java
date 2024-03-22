@@ -2,6 +2,8 @@ package com.example.youtubedemo.controller;
 
 import com.example.youtubedemo.dto.CommentDto;
 import com.example.youtubedemo.services.CommentService;
+import com.example.youtubedemo.services.VideoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +16,12 @@ import java.util.List;
 public class CommentController {
 
     private final CommentService commentService;
+    private final VideoService videoService;
 
     @Autowired
-    public CommentController(CommentService commentService) {
+    public CommentController(CommentService commentService, VideoService videoService) {
         this.commentService = commentService;
+        this.videoService = videoService;
     }
 
     @GetMapping
@@ -33,13 +37,14 @@ public class CommentController {
     }
 
     @PostMapping
-    public ResponseEntity<CommentDto> createComment(@RequestBody CommentDto commentDto) {
+    public ResponseEntity<CommentDto> createComment(@Valid @RequestBody CommentDto commentDto) {
         CommentDto createdComment = commentService.createComment(commentDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdComment);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CommentDto> updateComment(@PathVariable Long id, @RequestBody CommentDto updatedCommentDto) {
+    public ResponseEntity<CommentDto> updateComment(@PathVariable Long id, @Valid @RequestBody CommentDto updatedCommentDto) {
+
         CommentDto updatedComment = commentService.updateComment(id, updatedCommentDto);
         return ResponseEntity.ok(updatedComment);
     }

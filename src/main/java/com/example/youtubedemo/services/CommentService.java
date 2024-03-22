@@ -17,10 +17,16 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final CommentMapper commentMapper;
 
+    private final VideoService videoService;
     @Autowired
-    public CommentService(CommentRepository commentRepository, CommentMapper commentMapper) {
+    public CommentService(CommentRepository commentRepository, CommentMapper commentMapper, VideoService videoService) {
         this.commentRepository = commentRepository;
         this.commentMapper = commentMapper;
+        this.videoService = videoService;
+    }
+
+    public boolean commentExists(Long commentId) {
+        return commentRepository.existsById(commentId);
     }
 
     public List<CommentDto> getAllComments() {
@@ -30,31 +36,29 @@ public class CommentService {
                 .collect(Collectors.toList());
     }
 
-    public CommentDto getCommentById(Long id) {
+    public CommentDto getCommentById(Long id) throws NoSuchElementException {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Comment not found with id: " + id));
         return commentMapper.entityToDto(comment);
     }
 
     public CommentDto createComment(CommentDto commentDto) {
+        videoService.validateVideoId(commentDto.getVideoId());
         Comment comment = commentMapper.dtoToEntity(commentDto);
         Comment savedComment = commentRepository.save(comment);
         return commentMapper.entityToDto(savedComment);
     }
 
-    public CommentDto updateComment(Long id, CommentDto updatedCommentDto) {
+    public CommentDto updateComment(Long id, CommentDto updatedCommentDto) throws NoSuchElementException{
+        videoService.validateVideoId(updatedCommentDto.getVideoId());
         Comment existingComment = commentRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Comment not found with id: " + id));
-
-        // Update fields
         existingComment.setText(updatedCommentDto.getText());
-        // You can update other fields as needed
-
         Comment savedComment = commentRepository.save(existingComment);
         return commentMapper.entityToDto(savedComment);
     }
 
-    public void deleteComment(Long id) {
+    public void deleteComment(Long id) throws NoSuchElementException{
         if (!commentRepository.existsById(id)) {
             throw new NoSuchElementException("Comment not found with id: " + id);
         }

@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class CommentDto {
-    private Long id;
     @NotNull
     @Size(min = 1, max = 1000)
     private String text;

@@ -74,5 +74,11 @@ public class VideoService {
     }
 
 
+    public void validateVideoId(Long videoId) {
+        if (!videoRepository.existsById(videoId)) {
+            throw new IllegalArgumentException("Invalid videoId");
+        }
+    }
+
 
 }

@@ -35,7 +35,6 @@ public class CommentControllerTest {
     public void testGetAllComments() throws Exception {
         // Setup
         CommentDto commentDto = new CommentDto(); // create a sample CommentDto
-        commentDto.setId(1L);
         when(commentService.getAllComments()).thenReturn(Collections.singletonList(commentDto));
 
         // Test

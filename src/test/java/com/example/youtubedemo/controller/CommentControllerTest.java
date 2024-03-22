@@ -38,7 +38,7 @@ public class CommentControllerTest {
     @Test
     public void testGetAllComments() throws Exception {
         CommentDto commentDto = new CommentDto();
-        commentDto.setId(1L);
+
         when(commentService.getAllComments()).thenReturn(Collections.singletonList(commentDto));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/comment"))
@@ -50,7 +50,7 @@ public class CommentControllerTest {
     @Test
     public void testGetCommentById() throws Exception {
         CommentDto commentDto = new CommentDto();
-        commentDto.setId(1L);
+
         when(commentService.getCommentById(anyLong())).thenReturn(commentDto);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/comment/{id}", 1L))
@@ -62,7 +62,7 @@ public class CommentControllerTest {
     @Test
     public void testCreateComment() throws Exception {
         CommentDto commentDto = new CommentDto();
-        commentDto.setId(1L);
+
         when(commentService.createComment(any(CommentDto.class))).thenReturn(commentDto);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/comment")
@@ -76,7 +76,7 @@ public class CommentControllerTest {
     @Test
     public void testUpdateComment() throws Exception {
         CommentDto commentDto = new CommentDto();
-        commentDto.setId(1L);
+
         when(commentService.updateComment(anyLong(), any(CommentDto.class))).thenReturn(commentDto);
 
         mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/comment/{id}", 1L)
