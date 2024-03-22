@@ -83,13 +83,11 @@ class VideoServiceTest {
         video.setId(id);
         when(videoRepository.findById(id)).thenReturn(Optional.of(video));
         VideoDto videoDto = new VideoDto();
-        videoDto.setId(id);
         when(videoMapper.entityToDto(video)).thenReturn(videoDto);
 
         VideoDto result = videoService.getVideoById(id);
 
         assertNotNull(result);
-        assertEquals(id, result.getId());
         verify(videoRepository, times(1)).findById(id);
         verify(videoMapper, times(1)).entityToDto(video);
     }

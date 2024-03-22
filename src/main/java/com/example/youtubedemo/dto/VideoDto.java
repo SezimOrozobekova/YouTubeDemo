@@ -18,8 +18,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class VideoDto {
-//    @Column(updatable = false)
-//    private Long id;
+
+
     @NotBlank
     @Size(min = 1, max = 255)
     private String title;
@@ -29,7 +29,6 @@ public class VideoDto {
     private String description;
 
     @NotNull
-    @Column(updatable = false)
     @PastOrPresent(message = "Upload date must be in the past or present")
     private LocalDateTime uploadDate;
 
@@ -42,4 +41,6 @@ public class VideoDto {
     @NotNull
     @Column(updatable = false)
     private Long channelId;
+
+
 }
